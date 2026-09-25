@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ScholarFlow AI - Intelligent academic mentor and study assistant for students. Get personalized study schedules, active recall techniques, and exam prep.">
+    <title>ScholarFlow • Student AI Study Assistant</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Ambient background glow elements -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <div class="app-wrapper">
+        <!-- Navigation Bar -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">ScholarFlow <span class="badge-ai">AI</span></span>
+                    <span class="brand-subtitle">Smart Academic & Productivity Mentor</span>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <div id="aiStatusBadge" class="status-badge status-loading" title="Checking AI backend status">
+                    <span class="status-dot"></span>
+                    <span id="aiStatusText">Connecting...</span>
+                </div>
+
+                <button id="apiKeyBtn" class="btn-icon" title="Configure Gemini API Key" aria-label="Configure API Key">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                        <path d="m21 2-9.6 9.6"></path>
+                        <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+                    </svg>
+                    <span class="btn-text-sm">API Key</span>
+                </button>
+
+                <button id="themeToggleBtn" class="btn-icon" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+                    <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Container -->
+        <main class="main-card">
+            <!-- Hero Header -->
+            <div class="hero-section">
+                <div class="pill-announcement">
+                    <span class="sparkle">✨</span> Powered by Google Gemini 2.5 Flash
+                </div>
+                <h1 class="hero-heading">What study challenge are you facing?</h1>
+                <p class="hero-description">Get instant, science-backed study strategies, revision schedules, and problem breakdowns tailored to you.</p>
+            </div>
+
+            <!-- Topic Selector Chips -->
+            <div class="topic-section">
+                <label class="section-label">Select Your Focus Area:</label>
+                <div class="topic-chips" id="topicChips">
+                    <button type="button" class="chip active" data-category="Focus & Procrastination" data-placeholder="e.g., I keep scrolling on my phone instead of studying for tomorrow's biology exam...">
+                        <span class="chip-icon">🎯</span> Focus & Procrastination
+                    </button>
+                    <button type="button" class="chip" data-category="Exam Revision" data-placeholder="e.g., I have 3 days before my physics test and 5 chapters left. How should I revise?">
+                        <span class="chip-icon">📚</span> Exam Revision & Memory
+                    </button>
+                    <button type="button" class="chip" data-category="Hard Concepts" data-placeholder="e.g., Explain the concept of recursion or limits in calculus in simple terms...">
+                        <span class="chip-icon">🧩</span> Concept Breakdown
+                    </button>
+                    <button type="button" class="chip" data-category="Study Schedule" data-placeholder="e.g., I have school from 8 to 3 and coaching from 5 to 7. Create a balanced evening study timetable...">
+                        <span class="chip-icon">📅</span> Daily Study Schedule
+                    </button>
+                    <button type="button" class="chip" data-category="Stress Relief" data-placeholder="e.g., I feel overwhelmed with syllabus backlogs and can't sleep from test anxiety...">
+                        <span class="chip-icon">🧘</span> Stress & Overwhelm
+                    </button>
+                    <button type="button" class="chip" data-category="Homework & Doubt" data-placeholder="e.g., How do I structure an argumentative essay introduction?">
+                        <span class="chip-icon">💡</span> Homework & Doubt Help
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Area Card -->
+            <div class="input-card">
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="problemInput" 
+                        rows="4" 
+                        placeholder="Describe your study problem, subject, or upcoming exam..." 
+                        aria-label="Enter your study problem"
+                        maxlength="1500"
+                    ></textarea>
+                    
+                    <div class="textarea-footer">
+                        <span id="charCount" class="char-count">0 / 1500</span>
+                        <button type="button" id="clearInputBtn" class="btn-text" title="Clear text">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Quick Prompts Inspiration -->
+                <div class="quick-prompts">
+                    <span class="quick-prompts-label">Try asking:</span>
+                    <button type="button" class="prompt-pill" data-prompt="I keep procrastinating on my history essay. Give me a 25-minute Pomodoro start plan.">
+                        "I keep procrastinating on my essay..."
+                    </button>
+                    <button type="button" class="prompt-pill" data-prompt="How do I use active recall and spaced repetition for organic chemistry?">
+                        "Active recall for organic chemistry..."
+                    </button>
+                    <button type="button" class="prompt-pill" data-prompt="I have exam anxiety and feel like my mind goes blank. How can I stay calm?">
+                        "Mind goes blank during exams..."
+                    </button>
+                </div>
+
+                <!-- Action Button -->
+                <div class="action-row">
+                    <div class="keyboard-hint">
+                        <span>Press</span> <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+                    </div>
+                    
+                    <button id="helpBtn" class="btn-primary" type="button">
+                        <span class="btn-content">
+                            <svg class="btn-sparkle" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"></path>
+                            </svg>
+                            <span id="btnText">Get AI Study Strategy</span>
+                        </span>
+                        <div class="spinner" id="btnSpinner" aria-hidden="true"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Response Display Section -->
+            <section id="responseSection" class="response-section" aria-live="polite">
+                <div class="response-header">
+                    <div class="response-title-group">
+                        <div class="assistant-avatar">🎓</div>
+                        <div>
+                            <h2 class="response-title">AI Study Coach Guidance</h2>
+                            <div class="response-meta">
+                                <span id="responseCategory" class="badge-category">Focus & Procrastination</span>
+                                <span id="responseModelTag" class="badge-model">Gemini 2.5 Flash</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="response-actions">
+                        <button id="copyBtn" class="btn-action" title="Copy Advice to Clipboard">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span>Copy</span>
+                        </button>
+
+                        <button id="ttsBtn" class="btn-action" title="Listen to Study Advice">
+                            <svg id="ttsIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                            </svg>
+                            <span id="ttsBtnText">Listen</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formatted Markdown Body -->
+                <div id="responseBody" class="response-body"></div>
+
+                <!-- Follow-up suggestions -->
+                <div class="followup-box">
+                    <span class="followup-title">⚡ Follow-up Prompts:</span>
+                    <div class="followup-chips" id="followupChips">
+                        <button type="button" class="followup-chip" data-query="Make this a 1-hour hourly breakdown schedule.">Break into hourly schedule</button>
+                        <button type="button" class="followup-chip" data-query="Give me 3 practice active-recall questions to test myself on this.">Give me 3 practice test questions</button>
+                        <button type="button" class="followup-chip" data-query="Explain the hardest part using the Feynman Technique.">Explain like I'm 10 years old</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>ScholarFlow AI • Pair-programmed for Student Success • Built with Flask & Google Gemini 2.5 Flash</p>
+        </footer>
+    </div>
+
+    <!-- API Key Configuration Modal -->
+    <div id="apiKeyModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-header-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                        <path d="m21 2-9.6 9.6"></path>
+                        <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="modal-title">Google Gemini API Key</h3>
+                    <p class="modal-subtitle">Connect your free API key to unlock real-time Gemini 2.5 Flash reasoning</p>
+                </div>
+                <button type="button" id="closeModalBtn" class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <p class="modal-info">
+                    You can get a <strong>100% free Gemini API key</strong> directly from Google AI Studio in less than a minute.
+                </p>
+                
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="link-external">
+                    <span>Get free API key on Google AI Studio</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+
+                <div class="input-group">
+                    <label for="apiKeyInput" class="input-label">Gemini API Key:</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." autocomplete="off">
+                        <button type="button" id="toggleKeyVisibility" class="btn-toggle-eye" aria-label="Toggle visibility">👁️</button>
+                    </div>
+                </div>
+
+                <div class="privacy-note">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>Your key is stored securely in your local environment (.env) and never shared.</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cancelModalBtn" class="btn-secondary">Cancel</button>
+                <button type="button" id="saveApiKeyBtn" class="btn-primary-sm">Save & Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification for Actions -->
+    <div id="toastNotification" class="toast" role="status" aria-live="polite">
+        <span id="toastMessage">Success</span>
+    </div>
+
+    <!-- Script File Link -->
+    <script src="script.js"></script>
+</body>
+</html>

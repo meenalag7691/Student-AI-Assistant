@@ -1,0 +1,14 @@
+{
+  "name": "student-ai-assistant-mern",
+  "version": "2.0.0",
+  "description": "ScholarFlow AI - Full-Stack MERN Student Study Assistant with Google Gemini 2.5 Flash",
+  "type": "module",
+  "scripts": {
+    "dev": "node dev.js",
+    "start": "node dev.js",
+    "server": "npm --prefix server start",
+    "client": "npm --prefix client run dev"
+  },
+  "author": "",
+  "license": "ISC"
+}
